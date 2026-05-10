@@ -31,6 +31,13 @@ export const mockGetMyGroups = async (): Promise<Group[]> => {
   return groups;
 };
 
+export const mockJoinGroup = async (code: string): Promise<Group> => {
+  await delay(800);
+  const group = groups.find((g) => g.join_code === code);
+  if (!group) throw new Error('Grup dengan kode tersebut tidak ditemukan');
+  return group;
+};
+
 export const mockGetGroupDetail = async (groupId: string): Promise<Group> => {
   await delay(300);
   const group = groups.find((g) => g.id === groupId);
@@ -47,6 +54,7 @@ export const mockCreateGroup = async (data: {
   const newGroup: Group = {
     id: generateId(),
     name: data.name,
+    join_code: Math.random().toString(36).substring(2, 8).toUpperCase(),
     description: data.description,
     creator_id: CURRENT_USER.id,
     deadline: data.deadline ?? null,
@@ -105,11 +113,42 @@ export const mockCreateTask = async (groupId: string, data: CreateTaskPayload): 
     priority: data.priority ?? 'medium',
     status: 'todo',
     due_date: data.due_date ?? null,
+    image_url: null,
   };
   if (!tasks[groupId]) tasks[groupId] = [];
   tasks[groupId].unshift(newTask);
   checklists[newTask.id] = [];
   return newTask;
+};
+
+export const mockUploadTaskImage = async (taskId: string, file: File): Promise<string> => {
+  await delay(1000);
+  const url = URL.createObjectURL(file); // Mock URL
+  for (const gid of Object.keys(tasks)) {
+    const idx = tasks[gid].findIndex((t) => t.id === taskId);
+    if (idx !== -1) {
+      tasks[gid][idx].image_url = url;
+      return url;
+    }
+  }
+  throw new Error('Task tidak ditemukan');
+};
+
+export const mockUpdateOverviewAttachment = async (groupId: string, file: File): Promise<string> => {
+  await delay(1000);
+  const url = URL.createObjectURL(file);
+  if (overviews[groupId]) {
+    overviews[groupId].attachment_url = url;
+  } else {
+    overviews[groupId] = {
+      id: generateId(),
+      group_id: groupId,
+      content: '',
+      attachment_url: url,
+      updated_at: new Date().toISOString(),
+    };
+  }
+  return url;
 };
 
 export const mockUpdateTask = async (taskId: string, data: Partial<Task>): Promise<Task> => {

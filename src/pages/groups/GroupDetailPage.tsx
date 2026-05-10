@@ -75,11 +75,16 @@ export default function GroupDetailPage() {
             <span className="breadcrumb-current">{group.name}</span>
           </div>
           <h1 className="page-title">{group.name}</h1>
-          {group.deadline && (
-            <p className="page-subtitle">
-              Deadline: {new Date(group.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
-          )}
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <span style={{ fontSize: 13, color: '#6B7280', background: '#F3F4F6', padding: '4px 8px', borderRadius: 6 }}>
+              Kode: <strong>{group.join_code}</strong>
+            </span>
+            {group.deadline && (
+              <p className="page-subtitle" style={{ margin: 0 }}>
+                Deadline: {new Date(group.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 

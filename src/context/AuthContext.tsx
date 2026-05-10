@@ -18,7 +18,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const raw = localStorage.getItem('user');
-    if (raw) setUser(JSON.parse(raw) as User);
+    if (raw && raw !== 'undefined') {
+      try {
+        setUser(JSON.parse(raw) as User);
+      } catch (e) {
+        console.error('Failed to parse user from localStorage', e);
+        localStorage.removeItem('user');
+      }
+    }
     setLoading(false);
   }, []);
 

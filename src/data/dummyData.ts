@@ -13,6 +13,7 @@ export const DUMMY_GROUPS: Group[] = [
   {
     id: 'g1',
     name: 'Tugas Besar PABP',
+    join_code: 'PABP25',
     description: 'Membuat aplikasi multiplatform dengan React Native dan React',
     creator_id: 'u1',
     deadline: '2025-06-30',
@@ -22,6 +23,7 @@ export const DUMMY_GROUPS: Group[] = [
   {
     id: 'g2',
     name: 'Proyek Basis Data',
+    join_code: 'BASDAT',
     description: 'Desain dan implementasi database untuk sistem perpustakaan',
     creator_id: 'u2',
     deadline: '2025-06-15',
@@ -31,6 +33,7 @@ export const DUMMY_GROUPS: Group[] = [
   {
     id: 'g3',
     name: 'Tugas Jaringan Komputer',
+    join_code: 'JARKOM',
     description: 'Konfigurasi jaringan dan simulasi dengan Cisco Packet Tracer',
     creator_id: 'u1',
     deadline: '2025-05-20',
@@ -81,7 +84,7 @@ export const DUMMY_TASKS: Record<string, Task[]> = {
       title: 'Setup project React Native',
       description: 'Inisialisasi project Expo, install dependencies, dan buat struktur folder.',
       assigned_to: 'u1', assigned_to_name: 'Andi Pratama',
-      priority: 'high', status: 'done', due_date: '2025-04-10',
+      priority: 'high', status: 'done', due_date: '2025-04-10', image_url: null,
     },
     {
       id: 't2', group_id: 'g1',

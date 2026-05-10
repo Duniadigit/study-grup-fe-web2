@@ -12,6 +12,7 @@ import TaskListPage from './pages/groups/TaskListPage';
 import TaskDetailPage from './pages/groups/TaskDetailPage';
 import CreateTaskPage from './pages/groups/CreateTaskPage';
 import DashboardPage from './pages/DashboardPage';
+import JoinGroupPage from './pages/groups/JoinGroupPage';
 
 function RouteGuard() {
   const { user, loading } = useAuth();
@@ -34,6 +35,7 @@ function RouteGuard() {
       <Route element={<AppLayout />}>
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/groups/create" element={<CreateGroupPage />} />
+        <Route path="/groups/join" element={<JoinGroupPage />} />
         <Route path="/groups/:id" element={<GroupDetailPage />} />
         <Route path="/groups/:id/overview" element={<OverviewPage />} />
         <Route path="/groups/:id/tasks" element={<TaskListPage />} />

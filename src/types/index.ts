@@ -7,6 +7,7 @@ export interface User {
 export interface Group {
   id: string;
   name: string;
+  join_code: string;
   description: string;
   creator_id: string;
   deadline: string | null;
@@ -39,6 +40,7 @@ export interface Task {
   priority: Priority;
   status: TaskStatus;
   due_date: string | null;
+  image_url?: string | null;
 }
 
 export interface ChecklistItem {

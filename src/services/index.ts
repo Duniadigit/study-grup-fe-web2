@@ -1,11 +1,12 @@
 import * as mock from './mockService';
 import * as real from './api';
 
-const USE_MOCK = true; // ← ganti false saat backend siap
+const USE_MOCK = false; // ← ganti false saat backend siap
 
 export const login = USE_MOCK ? mock.mockLogin : real.login;
 export const register = USE_MOCK ? mock.mockRegister : real.register;
 export const getMyGroups = USE_MOCK ? mock.mockGetMyGroups : real.getMyGroups;
+export const joinGroup = USE_MOCK ? mock.mockJoinGroup : real.joinGroup;
 export const getGroupDetail = USE_MOCK ? mock.mockGetGroupDetail : real.getGroupDetail;
 export const createGroup = USE_MOCK ? mock.mockCreateGroup : real.createGroup;
 export const deleteGroup = USE_MOCK ? mock.mockDeleteGroup : real.deleteGroup;
@@ -22,3 +23,5 @@ export const addChecklist = USE_MOCK ? mock.mockAddChecklist : real.addChecklist
 export const toggleChecklist = USE_MOCK ? mock.mockToggleChecklist : real.toggleChecklist;
 export const deleteChecklist = USE_MOCK ? mock.mockDeleteChecklist : real.deleteChecklist;
 export const getDashboard = USE_MOCK ? mock.mockGetDashboard : real.getDashboard;
+export const uploadTaskImage = USE_MOCK ? mock.mockUploadTaskImage : real.uploadTaskImage;
+export const updateOverviewAttachment = USE_MOCK ? mock.mockUpdateOverviewAttachment : real.updateOverviewAttachment;

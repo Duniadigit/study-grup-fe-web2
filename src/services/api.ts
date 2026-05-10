@@ -3,7 +3,7 @@ import {
   Task, ChecklistItem, Dashboard, CreateTaskPayload, TaskStatus,
 } from '../types';
 
-const BASE_URL = 'http://localhost:3001/api';
+const BASE_URL = 'http://localhost:8000/api';
 
 const getHeaders = () => {
   const token = localStorage.getItem('token');
@@ -22,34 +22,115 @@ const request = async <T>(path: string, options?: RequestInit): Promise<T> => {
   return res.json();
 };
 
-export const login = (email: string, password: string): Promise<AuthResponse> =>
-  request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+export const login = async (email: string, password: string): Promise<AuthResponse> => {
+  const res = await request<{ data: AuthResponse }>('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
+  return res.data;
+};
 
-export const register = (name: string, email: string, password: string): Promise<AuthResponse> =>
-  request('/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password }) });
+export const register = async (name: string, email: string, password: string): Promise<AuthResponse> => {
+  const res = await request<{ data: AuthResponse }>('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, password }),
+  });
+  return res.data;
+};
 
-export const getMyGroups = (): Promise<Group[]> => request('/groups');
-export const getGroupDetail = (id: string): Promise<Group> => request(`/groups/${id}`);
-export const createGroup = (data: { name: string; description: string; deadline?: string | null }): Promise<Group> =>
-  request('/groups', { method: 'POST', body: JSON.stringify(data) });
+export const getMyGroups = async (): Promise<Group[]> => {
+  const res = await request<{ data: Group[] }>('/groups');
+  return res.data;
+};
+
+export const joinGroup = async (code: string): Promise<Group> => {
+  const res = await request<{ data: Group }>('/groups/join', {
+    method: 'POST',
+    body: JSON.stringify({ code }),
+  });
+  return res.data;
+};
+
+export const getGroupDetail = async (id: string): Promise<Group> => {
+  const res = await request<{ data: Group }>(`/groups/${id}`);
+  return res.data;
+};
+
+export const createGroup = async (data: { name: string; description: string; deadline?: string | null }): Promise<Group> => {
+  const res = await request<{ data: Group }>('/groups', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return res.data;
+};
+
 export const deleteGroup = (id: string): Promise<void> => request(`/groups/${id}`, { method: 'DELETE' });
+
 export const getMembers = (groupId: string): Promise<Member[]> => request(`/groups/${groupId}/members`);
+
 export const getOverview = (groupId: string): Promise<Overview | null> => request(`/groups/${groupId}/overview`);
+
 export const updateOverview = (groupId: string, content: string): Promise<Overview> =>
   request(`/groups/${groupId}/overview`, { method: 'POST', body: JSON.stringify({ content }) });
-export const getTasks = (groupId: string): Promise<Task[]> => request(`/groups/${groupId}/tasks`);
-export const createTask = (groupId: string, data: CreateTaskPayload): Promise<Task> =>
-  request(`/groups/${groupId}/tasks`, { method: 'POST', body: JSON.stringify(data) });
-export const updateTask = (taskId: string, data: Partial<Task>): Promise<Task> =>
-  request(`/tasks/${taskId}`, { method: 'PATCH', body: JSON.stringify(data) });
-export const updateTaskStatus = (taskId: string, status: TaskStatus): Promise<Task> =>
-  request(`/tasks/${taskId}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+
+export const getTasks = async (groupId: string): Promise<Task[]> => {
+  const res = await request<{ data: Task[] }>(`/groups/${groupId}/tasks`);
+  return res.data;
+};
+
+export const createTask = async (groupId: string, data: CreateTaskPayload): Promise<Task> => {
+  const res = await request<{ data: Task }>(`/groups/${groupId}/tasks`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return res.data;
+};
+
+export const updateTask = async (taskId: string, data: Partial<Task>): Promise<Task> => {
+  const res = await request<{ data: Task }>(`/tasks/${taskId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+  return res.data;
+};
+
+export const updateTaskStatus = async (taskId: string, status: TaskStatus): Promise<Task> => {
+  const res = await request<{ data: Task }>(`/tasks/${taskId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+  return res.data;
+};
+
 export const deleteTask = (taskId: string): Promise<void> => request(`/tasks/${taskId}`, { method: 'DELETE' });
+
 export const getChecklists = (taskId: string): Promise<ChecklistItem[]> => request(`/tasks/${taskId}/checklist`);
-export const addChecklist = (taskId: string, item: string): Promise<ChecklistItem> =>
-  request(`/tasks/${taskId}/checklist`, { method: 'POST', body: JSON.stringify({ item }) });
-export const toggleChecklist = (checklistId: string, completed: boolean): Promise<ChecklistItem> =>
-  request(`/checklists/${checklistId}`, { method: 'PATCH', body: JSON.stringify({ completed }) });
+
+export const addChecklist = async (taskId: string, item: string): Promise<ChecklistItem> => {
+  const res = await request<{ data: ChecklistItem }>(`/tasks/${taskId}/checklist`, {
+    method: 'POST',
+    body: JSON.stringify({ item }),
+  });
+  return res.data;
+};
+
+export const toggleChecklist = async (checklistId: string, completed: boolean): Promise<ChecklistItem> => {
+  const res = await request<{ data: ChecklistItem }>(`/checklists/${checklistId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ completed }),
+  });
+  return res.data;
+};
+
 export const deleteChecklist = (checklistId: string): Promise<void> =>
   request(`/checklists/${checklistId}`, { method: 'DELETE' });
+
 export const getDashboard = (): Promise<Dashboard> => request('/dashboard');
+
+export const uploadTaskImage = async (_taskId: string, _file: File): Promise<string> => {
+  throw new Error('Not implemented in real API yet');
+};
+
+export const updateOverviewAttachment = async (_groupId: string, _file: File): Promise<string> => {
+  throw new Error('Not implemented in real API yet');
+};

@@ -23,9 +23,14 @@ export default function GroupsPage() {
           <h1 className="page-title">Grup Saya</h1>
           <p className="page-subtitle">{groups.length} grup aktif</p>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/groups/create')}>
-          + Buat Grup
-        </button>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button className="btn btn-ghost" onClick={() => navigate('/groups/join')}>
+            Gabung Grup
+          </button>
+          <button className="btn btn-primary" onClick={() => navigate('/groups/create')}>
+            + Buat Grup
+          </button>
+        </div>
       </div>
 
       <div className="page-body">
@@ -37,10 +42,15 @@ export default function GroupsPage() {
           <div className="empty-state">
             <div className="empty-state-icon">👥</div>
             <div className="empty-state-title">Belum ada grup</div>
-            <p className="empty-state-text">Buat grup baru untuk memulai kolaborasi</p>
-            <button className="btn btn-primary" style={{ marginTop: 20 }} onClick={() => navigate('/groups/create')}>
-              + Buat Grup Pertama
-            </button>
+            <p className="empty-state-text">Buat grup baru atau gabung ke grup yang sudah ada</p>
+            <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+              <button className="btn btn-ghost" onClick={() => navigate('/groups/join')}>
+                Gabung Grup
+              </button>
+              <button className="btn btn-primary" onClick={() => navigate('/groups/create')}>
+                + Buat Grup Pertama
+              </button>
+            </div>
           </div>
         ) : (
           <div className="groups-grid">

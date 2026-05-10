@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   getTasks, getChecklists, toggleChecklist,
   addChecklist, deleteTask, updateTaskStatus,
+  uploadTaskImage,
 } from '../../services';
 import { Task, ChecklistItem, TaskStatus } from '../../types';
 
@@ -44,12 +45,14 @@ function ConfirmDialog({ title, message, onConfirm, onCancel }: {
 export default function TaskDetailPage() {
   const { id: groupId, taskId } = useParams<{ id: string; taskId: string }>();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [task, setTask] = useState<Task | null>(null);
   const [checklists, setChecklists] = useState<ChecklistItem[]>([]);
   const [newItem, setNewItem] = useState('');
   const [loading, setLoading] = useState(true);
   const [addingItem, setAddingItem] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const load = useCallback(async () => {
@@ -87,6 +90,18 @@ export default function TaskDetailPage() {
     const next = STATUS_NEXT[task.status];
     setTask((prev) => prev ? { ...prev, status: next } : prev);
     await updateTaskStatus(taskId!, next);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadTaskImage(taskId!, file);
+      setTask((prev) => prev ? { ...prev, image_url: url } : prev);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -181,6 +196,38 @@ export default function TaskDetailPage() {
                       </div>
                     </div>
                   )}
+                </div>
+              )}
+            </div>
+
+            {/* Proof of Work (Image) */}
+            <div className="card" style={{ marginBottom: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <h3 className="section-title" style={{ marginBottom: 0 }}>Bukti Pekerjaan</h3>
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                />
+                <button
+                  className="btn btn-outline btn-sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? 'Uploading...' : task.image_url ? 'Ganti Foto' : 'Tambah Foto'}
+                </button>
+              </div>
+
+              {task.image_url ? (
+                <div className="task-image-preview">
+                  <img src={task.image_url} alt="Bukti Task" />
+                </div>
+              ) : (
+                <div className="empty-state-mini">
+                  <div style={{ fontSize: 24, marginBottom: 8 }}>📷</div>
+                  <div style={{ fontSize: 13, color: '#9CA3AF' }}>Belum ada foto bukti</div>
                 </div>
               )}
             </div>
@@ -298,3 +345,4 @@ export default function TaskDetailPage() {
     </>
   );
 }
+
