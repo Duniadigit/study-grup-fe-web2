@@ -9,6 +9,7 @@ const getHeaders = () => {
   const token = localStorage.getItem('token');
   return {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 };
@@ -33,7 +34,7 @@ export const login = async (email: string, password: string): Promise<AuthRespon
 export const register = async (name: string, email: string, password: string): Promise<AuthResponse> => {
   const res = await request<{ data: AuthResponse }>('/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ name, email, password, password_confirmation: password }),
   });
   return res.data;
 };
